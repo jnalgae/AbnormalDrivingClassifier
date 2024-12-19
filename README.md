@@ -63,7 +63,7 @@ YOLOv5를 사용하여 운전자의 담배, 휴대전화, 양쪽 눈, 입을 검
 **모델 구조를 수정하지 않은 ResNet50 + YOLOv5**
 + 개별 모델 Test 결과
   + YOLOv5 mAP50: 98.6%
-  + ResNet50 Accuracy: 95.12%
+  + ResNet50 Accuracy: 95.55%
 + 최종 Inference 결과 (ResNet50 + YOLOv5)
   + Accuracy: %   
   + 하품 Class recall: % 
