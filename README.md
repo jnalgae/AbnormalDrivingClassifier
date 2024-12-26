@@ -60,7 +60,16 @@ YOLOv5를 사용하여 운전자의 담배, 휴대전화, 양쪽 눈, 입을 검
    + SE block: channel 간 중요도 학습을 위해 추가하였지만 성능이 저하되어 사용하지 않음
 
 ## 모델 평가 
-**Customized ResNet50 + YOLOv5 (lr2 규제와 GaussianBlur 적용 X)**
+**ResNet50-a (compound scaling, he 초기화, 샘플 수 조정, 데이터 증강, NAdam, ConsineAnnealingLR 적용)**
++ Accuracy: 84.31%
+
+**ResNet50-b (ResNet50-a + dilated conv)**
++ Accuracy: 95.88%
+
+**ResNet50-c (ResNet50-a + se block)**
++ ResNet50 Accuracy: 95.12%
+
+**ResNet50-b + YOLOv5 (lr2 규제와 GaussianBlur 적용 X)**
 + 개별 모델 Test 결과
    + YOLOv5 mAP50: 98.6%
    + ResNet50 Accuracy: 95.88%
@@ -72,7 +81,7 @@ YOLOv5를 사용하여 운전자의 담배, 휴대전화, 양쪽 눈, 입을 검
   + 졸음 Class recall: 100%
   + 흡연 Class recall: 83%
  
-**최종 Customized ResNet50 + YOLOv5 (lr2 규제와 GaussianBlur 적용 O)**
+**ResNet50-b` + YOLOv5 (lr2 규제와 GaussianBlur 적용 O)**
 + 개별 모델 Test 결과
    + YOLOv5 mAP50: 98.6%
    + ResNet50 Accuracy: 95.56%
