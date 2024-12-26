@@ -25,7 +25,7 @@ YOLOv5를 사용하여 운전자의 담배, 휴대전화, 양쪽 눈, 입을 검
 
 최종 추론 단계에서는 YOLO의 검출 결과를 먼저 확인한다. 확인 결과 만약 담배나 휴대전화가 존재한다면 해당 이미지를 흡연 혹은 통화로 분류한다. 만약 담배와 휴대전화가 포함돼 있지 않다면, ResNet 모델의 판단 결과 중 입의 개폐 여부를 먼저 확인한다. 입이 닫혀 있다면(하품 상태가 아님) 그 다음으로 눈의 개폐 여부를 확인한다. 
 
-### 데이터 전처리
+### 최종 데이터 전처리
 **YOLOv5**
    + **데이터 형식 변경**: AI Hub dataset에 포함된 json 파일을 yolo 훈련에 사용하기 위해 txt 형식으로 변환
    + **데이터 분할**: 전체 이미지를 6:2:2 비율로 나누어 train set, validation set, test set을 생성
@@ -38,10 +38,10 @@ YOLOv5를 사용하여 운전자의 담배, 휴대전화, 양쪽 눈, 입을 검
       + close class = closed eye 2250장 + closed mouth 1750장
       + open class = opened eye 2250장 * opened mouth 1750장
    + **데이터 분할**: 전체 이미지를 6:2:2 비율로 나누어 train set, validation set, test set을 생성
-   + **데이터 증강**: 데이터셋의 다양성을 위해 RandomRotation과 RandomVerticalFlip을 적용
+   + **데이터 증강**: RandomRotation, RandomVerticalFlip, GaussianBlur적용
 
 
-## 모델 수정 및 최적화 기법
+## 최종 모델 수정 및 최적화 기법
 **YOLOv5**
 + **detect.py 수정**
    + 담배와 휴대전화 유무를 True/False 값으로 return 하도록 수정
@@ -54,7 +54,9 @@ YOLOv5를 사용하여 운전자의 담배, 휴대전화, 양쪽 눈, 입을 검
 + **최적화 기법**
    + NAdam optimizer: 학습 초반부에 빠르게 학습할 수 있도록 적용
    + CosineAnnealingLR: 학습 후반부에 세밀하게 학습할 수 있도록 적용
-
++ **가중치 규제 기법**
+   + lr2 규제: 모델의 일반화 성능을 향상시키기 위해 적용
+   
 **사용하지 않은 전략**
    + ESRGAN: 저화질 데이터를 개선하고자 시도하였지만 격자 모양 아티팩트가 강조되어 사용하지 않음
    + SE block: channel 간 중요도 학습을 위해 추가하였지만 성능이 저하되어 사용하지 않음
@@ -65,23 +67,34 @@ YOLOv5를 사용하여 운전자의 담배, 휴대전화, 양쪽 눈, 입을 검
   + YOLOv5 mAP50: 98.6%
   + ResNet50 Accuracy: 95.55%
 + 최종 Inference 결과 (ResNet50 + YOLOv5)
-  + Accuracy: %   
-  + 하품 Class recall: % 
-  + 통화 Class recall: %
-  + 정상 Class recall: %
-  + 졸음 Class recall: %
-  + 흡연 Class recall: %
+  + Accuracy: 94.5%   
+  + 흡연 Class recall: 97% 
+  + 통화 Class recall: 99%
+  + 졸음 Class recall: 97%
+  + 하품 Class recall: 96%
+  + 정상 Class recall: 91%
 
-**모델 구조 수정 및 최적화 기법을 적용한 ResNet50 + YOLOv5**
+**Customized ResNet50 + YOLOv5 (lr2 규제와 GaussianBlur 적용 X)**
 + 개별 모델 Test 결과
    + YOLOv5 mAP50: 98.6%
    + ResNet50 Accuracy: 95.88%
 + 최종 Inference 결과 (ResNet50 + YOLOv5)
-  + Accuracy: %
-  + 하품 Class recall: %
-  + 통화 Class recall: %
-  + 정상 Class recall: %
-  + 졸음 Class recall: %
-  + 흡연 Class recall: %
-
+  + Accuracy: 88.6%
+  + 하품 Class recall: 97%
+  + 통화 Class recall: 99%
+  + 정상 Class recall: 85%
+  + 졸음 Class recall: 100%
+  + 흡연 Class recall: 83%
+ 
+**최종 Customized ResNet50 + YOLOv5 (lr2 규제와 GaussianBlur 적용 O)**
++ 개별 모델 Test 결과
+   + YOLOv5 mAP50: 98.6%
+   + ResNet50 Accuracy: 95.56%
++ 최종 Inference 결과 (ResNet50 + YOLOv5)
+  + Accuracy: 91.9%
+  + 하품 Class recall: 97%
+  + 통화 Class recall: 99%
+  + 정상 Class recall: 96%
+  + 졸음 Class recall: 100%
+  + 흡연 Class recall: 85%
 
