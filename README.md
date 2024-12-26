@@ -36,7 +36,7 @@ YOLOv5를 사용하여 운전자의 담배, 휴대전화, 양쪽 눈, 입을 검
       + 기존 파일명_클래스 이름_Close
    + **데이터 언더샘플링**: Open 및 Close 클래스에 포함된 눈과 입 사진의 비율을 조정  
       + close class = closed eye 2250장 + closed mouth 1750장
-      + open class = opened eye 2250장 * opened mouth 1750장
+      + open class = opened eye 2250장 + opened mouth 1750장
    + **데이터 분할**: 전체 이미지를 6:2:2 비율로 나누어 train set, validation set, test set을 생성
    + **데이터 증강**: RandomRotation, RandomVerticalFlip, GaussianBlur적용
 
@@ -48,32 +48,18 @@ YOLOv5를 사용하여 운전자의 담배, 휴대전화, 양쪽 눈, 입을 검
    + 양쪽 눈과 입의 confidence 값이 가장 높은 bbox 좌표를 return 하도록 수정
      
 **ResNet50**
-+ **Compound scaling**
-   + He initialization: 학습 안정성을 위해 수정된 Conv2d layer에 적용
-   + dilated convolution: compound scaling을 적용하며 추가된 layer에 대해 dilated convolution을 적용
-+ **최적화 기법**
-   + NAdam optimizer: 학습 초반부에 빠르게 학습할 수 있도록 적용
-   + CosineAnnealingLR: 학습 후반부에 세밀하게 학습할 수 있도록 적용
-+ **가중치 규제 기법**
-   + lr2 규제: 모델의 일반화 성능을 향상시키기 위해 적용
++ Compound scaling: resnet50 성능 향상을 위해 적용
++ He initialization: 학습 안정성을 위해 수정된 Conv2d layer에 적용
++ dilated convolution: compound scaling을 적용하며 추가된 layer에 대해 dilated convolution을 적용
++ NAdam optimizer: 학습 초반부에 빠르게 학습할 수 있도록 적용
++ CosineAnnealingLR: 학습 후반부에 세밀하게 학습할 수 있도록 적용
++ lr2 규제: 모델의 일반화 성능을 향상시키기 위해 적용
    
 **사용하지 않은 전략**
    + ESRGAN: 저화질 데이터를 개선하고자 시도하였지만 격자 모양 아티팩트가 강조되어 사용하지 않음
    + SE block: channel 간 중요도 학습을 위해 추가하였지만 성능이 저하되어 사용하지 않음
 
 ## 모델 평가 
-**모델 구조를 수정하지 않은 ResNet50 + YOLOv5**
-+ 개별 모델 Test 결과
-  + YOLOv5 mAP50: 98.6%
-  + ResNet50 Accuracy: 95.55%
-+ 최종 Inference 결과 (ResNet50 + YOLOv5)
-  + Accuracy: 94.5%   
-  + 흡연 Class recall: 97% 
-  + 통화 Class recall: 99%
-  + 졸음 Class recall: 97%
-  + 하품 Class recall: 96%
-  + 정상 Class recall: 91%
-
 **Customized ResNet50 + YOLOv5 (lr2 규제와 GaussianBlur 적용 X)**
 + 개별 모델 Test 결과
    + YOLOv5 mAP50: 98.6%
